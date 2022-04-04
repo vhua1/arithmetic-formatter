@@ -1,131 +1,67 @@
 # arithmetic-formatter
-def arithmetic_arranger(problems, display=False):
-    operators = []
-    longest_operands = []
-    len_diffs = []
+## Assignment
 
-    num_spaces = []
+Students in primary school often arrange arithmetic problems vertically to make them easier to solve. For example, "235 + 52" becomes:
+```
+  235
++  52
+-----
+```
 
-    print_list = []
-    print_list_2 = []
-    print_list_3 = []
+Create a function that receives a list of strings that are arithmetic problems and returns the problems arranged vertically and side-by-side. The function should optionally take a second argument. When the second argument is set to `True`, the answers should be displayed.
 
-    if len(problems) > 5:
-        return "Error: Too many problems."
-    
-    for problem in range(len(problems)):
-        if "+" in problems[problem]:
-            problems[problem] = problems[problem].split(" + ")
-            operators.append("+")
-            
-        elif "-" in problems[problem]:
-            problems[problem] = problems[problem].split(" - ")
-            operators.append("-")
+### For example
 
-        else:
-            return "Error: Operator must be '+' or '-'."
+Function Call:
+```py
+arithmetic_arranger(["32 + 698", "3801 - 2", "45 + 43", "123 + 49"])
+```
 
-    for problem in range(len(problems)):
-        if problems[problem][0].isdigit() == False:
-            return "Error: Numbers must only contain digits."
-        elif problems[problem][1].isdigit() == False:
-            return "Error: Numbers must only contain digits."
+Output:
+```
+   32      3801      45      123
++ 698    -    2    + 43    +  49
+-----    ------    ----    -----
+```
 
-    for problem in range(len(problems)):
-        if len(problems[problem][0]) > 4:
-            return "Error: Numbers cannot be more than four digits."
-        elif len(problems[problem][1]) > 4:
-            return "Error: Numbers cannot be more than four digits."
+Function Call:
+```py
+arithmetic_arranger(["32 + 8", "1 - 3801", "9999 + 9999", "523 - 49"], True)
+```
 
-    for problem in range(len(problems)):
-        if len(problems[problem][0]) < len(problems[problem][1]):
-            longest_operands.append("1")
+Output:
+```
+  32         1      9999      523
++  8    - 3801    + 9999    -  49
+----    ------    ------    -----
+  40     -3800     19998      474
+```
 
-            len_diffs.append(1 + (len(problems[problem][1])-len(problems[problem][0])))
-        else:
-            longest_operands.append("-1")
+### Rules
 
-            len_diffs.append(-1 - (len(problems[problem][0])-len(problems[problem][1])))
+The function will return the correct conversion if the supplied problems are properly formatted, otherwise, it will **return** a **string** that describes an error that is meaningful to the user.  
 
- 
 
-    for lens in range(len(len_diffs)):
-        if len_diffs[lens] > 0:
-            for num_times_print in range(len_diffs[lens]):
-                print_list.append(" ")
-            print_list.append(" ")
-            print_list.append(problems[lens][0])
+* Situations that will return an error:
+  * If there are **too many problems** supplied to the function. The limit is **five**, anything more will return:
+    `Error: Too many problems.`
+  * The appropriate operators the function will accept are **addition** and **subtraction**. Multiplication and division will return an error. Other operators not mentioned in this bullet point will not need to be tested. The error returned will be:
+    `Error: Operator must be '+' or '-'.`
+  * Each number (operand) should only contain digits. Otherwise, the function will return:
+    `Error: Numbers must only contain digits.`
+  * Each operand (aka number on each side of the operator) has a max of four digits in width. Otherwise, the error string returned will be:
+    `Error: Numbers cannot be more than four digits.`
+*  If the user supplied the correct format of problems, the conversion you return will follow these rules:
+    * There should be a single space between the operator and the longest of the two operands, the operator will be on the same line as the second operand, both operands will be in the same order as provided (the first will be the top one and the second will be the bottom.
+    * Numbers should be right-aligned.
+    * There should be four spaces between each problem.
+    * There should be dashes at the bottom of each problem. The dashes should run along the entire length of each problem individually. (The example above shows what this should look like.)
 
-            if lens != (len(problems) - 1):
-                print_list.append("    ")
-        else:
-            print_list.append("  ")
-            print_list.append(problems[lens][0])
+### Development
 
-            if lens != (len(problems) - 1):
-                print_list.append("    ")
+Write your code in `arithmetic_arranger.py`. For development, you can use `main.py` to test your `arithmetic_arranger()` function. Click the "run" button and `main.py` will run.
 
-    for lens in range(len(len_diffs)):
-        print_list_2.append(operators[lens])
-        if len_diffs[lens] < 0:
-            for spaces in range(abs(len_diffs[lens])):
-                print_list_2.append(" ")
-            print_list_2.append(problems[lens][1])
+### Testing 
 
-            if lens != (len(problems) - 1):
-                print_list_2.append("    ")
-        else:
-            print_list_2.append(" ")
-            print_list_2.append(problems[lens][1])
+The unit tests for this project are in `test_module.py`. We imported the tests from `test_module.py` to `main.py` for your convenience. The tests will run automatically whenever you hit the "run" button.
 
-            if lens != (len(problems) - 1):
-                print_list_2.append("    ")
-
-    for operands in range(len(longest_operands)):
-        if longest_operands[operands] == "-1":
-            for number_of_dashes in range(len(problems[operands][0])+2):
-                print_list_3.append("-")
-        else:
-            for number_of_dashes in range(len(problems[operands][1])+2):
-                print_list_3.append("-")
-                
-
-        if operands != (len(problems) - 1):
-            print_list_3.append("    ")
-
-    return_statement = ''.join(print_list) + "\n" + ''.join(print_list_2) + "\n" + ''.join(print_list_3)
-    
-    if display == True:
-        solutions = []
-        print_list_4 = []
-        for problem in range(len(problems)):
-            if operators[problem] == "+":
-                solutions.append(int(problems[problem][0]) + int(problems[problem][1]))
-            else:
-                solutions.append(int(problems[problem][0]) - int(problems[problem][1]))
-
-        for problem in range(len(problems)):
-            if len(problems[problem][0]) > len(problems[problem][1]):
-                num_spaces.append(len(str(problems[problem][0])) - len(str(solutions[problem])))
-            else:
-                num_spaces.append(len(str(problems[problem][1])) - len(str(solutions[problem])))
-
-        for spaces in range(len(num_spaces)):
-            for i in range(2 + int(num_spaces[spaces])):
-                print_list_4.append(" ")
-                
-            print_list_4.append(solutions[spaces])
-
-            if spaces != (len(problems) - 1):
-                print_list_4.append("    ")
-
-        for i in range(len(print_list_4)):
-            if isinstance(print_list_4[i], int):
-                print_list_4[i] = str(print_list_4[i])
-
-        return_statement = ''.join(print_list) + "\n" + ''.join(print_list_2) + "\n" + ''.join(print_list_3) + "\n" + ''.join(print_list_4)
-            
-        return return_statement
-
-    else:
-        return return_statement
